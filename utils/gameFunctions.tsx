@@ -3,7 +3,7 @@ import { IGame } from "../Typescript/Interfaces/game_interface";
 
 // GENERAL FUNCTIONS //
 
-export const buildGameObject = (obj: any): IGame => {
+export const buildEgsGameObject = (obj: any): IGame => {
     const game: IGame = {
         title: obj?.title,
         description: obj?.description,
@@ -41,11 +41,14 @@ export async function getEgsRessources() {
 // STEAM FUNCTIONS //
 
 async function filterSteamRessources(data: any) {
-    const acceptedValues = ["ZendoVR"];
+    const acceptedValues:string[] = ["ZendoVR", "torchlight"];
     console.log(data);
     const result = data?.apps?.map((el: any) => {
-        if (el?.name == "ZendoVR") console.log(el?.name);
+        if (acceptedValues.some((o) => el?.name?.toLowerCase().includes(o.toLowerCase())))
+        console.log(el.name);
     });
+
+    return result;
 }
 
 export async function getSteamResources() {
