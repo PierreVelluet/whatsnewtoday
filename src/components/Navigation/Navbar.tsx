@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -18,7 +18,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import FiberNewIcon from "@mui/icons-material/FiberNew";
-import { usePathname } from 'next/navigation'
+import { usePathname } from "next/navigation";
 
 const pages = [
     { name: "Jeux vidéo", ref: "games" },
@@ -31,9 +31,9 @@ function ResponsiveAppBar() {
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
     const router = useRouter();
-    const isPageActive = (ref:string):boolean => {
-        return usePathname() == "/"+ref;
-    } 
+    // const isPageActive = (ref: string): boolean => {
+    //     return usePathname() == "/" + ref;
+    // };
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
@@ -42,12 +42,11 @@ function ResponsiveAppBar() {
         setAnchorElUser(event.currentTarget);
     };
 
-    const handleClickitemNavigation = (path:string) => {
+    const handleClickitemNavigation = (path: string) => {
         router.push(path ?? "/");
     };
 
-    const handleCloseUserMenu = () => {
-    };
+    const handleCloseUserMenu = () => {};
 
     return (
         <AppBar position="fixed" sx={{ mb: 5 }}>
@@ -110,7 +109,6 @@ function ResponsiveAppBar() {
                         variant="h5"
                         noWrap
                         component="a"
-                        href=""
                         sx={{
                             mr: 2,
                             display: { xs: "flex", md: "none" },
@@ -120,13 +118,16 @@ function ResponsiveAppBar() {
                             letterSpacing: ".3rem",
                             color: "inherit",
                             textDecoration: "none",
-                        }}>
-                    </Typography>
+                        }}></Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
                         {pages.map((page) => (
-                                <Button key={page.ref} onClick={() => handleClickitemNavigation(page.ref)} sx={{ my: 2, color: isPageActive(page.ref) ? "red" : "white", display: "block" }}>
-                                    {page.name}
-                                </Button>
+                            <Button
+                                key={page.ref}
+                                onClick={() => handleClickitemNavigation(page.ref)}
+                                // sx={{ my: 2, color: isPageActive(page.ref) ? "red" : "white", display: "block" }}>
+                                sx={{ my: 2, color:  "red" }}>
+                                {page.name}
+                            </Button>
                         ))}
                     </Box>
 

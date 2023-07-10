@@ -1,0 +1,21 @@
+.card {
+    max-width: 300px;
+    max-height: 600px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.cardImage {
+    height: 150px;
+    object-fit: cover;
+}
+
+.dateSquare{
+    justify-content: flex-end;
+}
+
+@media only screen and (max-width: 600px) {
+    .card {
+        margin-right: 0px;
+    }
+  }

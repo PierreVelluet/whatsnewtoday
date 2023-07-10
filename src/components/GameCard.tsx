@@ -5,73 +5,40 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Button, CardActionArea, CardActions } from "@mui/material";
+import { CardActionArea } from "@mui/material";
 import { IGame } from "../../Typescript/Interfaces/game_interface";
-import { format, isEqual, isBefore, isAfter } from "date-fns";
+import { BuildDateString, BuildPriceString, BuildClickableLink, TrimString } from "../../utils/gameFunctions";
 
-export default function MultiActionAreaCard(props: any) {
+import styles from "./GameCard.module.css";
+
+export default function GameCard(props: any) {
     const {
         game,
     }: {
         game: IGame;
     } = props;
 
-   
-    const egsLink:string = "https://store.epicgames.com/en-US/free-games";
-
-    const ButtonClickHandler = (statusAvailable: boolean) => {
-        if (!statusAvailable) return;
-        window.open(egsLink);
-    };
-
-    const DateFormat = (data: string): string => {
-        if (!data) return "";
-        const dateFinale = format(new Date(data), "dd-MM-yyyy");
-
-        console.log(dateFinale);
-        return dateFinale;
-    };
-
-    const isBetween = (date:Date, from:Date, to:Date, inclusivity = '()') => {
-        if (!['()', '[]', '(]', '[)'].includes(inclusivity)) {
-            throw new Error('Inclusivity parameter must be one of (), [], (], [)');
-        }
-    
-        const isBeforeEqual = inclusivity[0] === '[',
-            isAfterEqual = inclusivity[1] === ']';
-    
-        return (isBeforeEqual ? (isEqual(from, date) || isBefore(from, date)) : isBefore(from, date)) &&
-            (isAfterEqual ? (isEqual(to, date) || isAfter(to, date)) : isAfter(to, date));
-    };
-
-    const statusAvailable: boolean =  isBetween(new Date(), new Date(game.startDate), new Date(game.endDate) )
-
     return (
-        <Card sx={{ maxWidth: 345, marginRight: "20px" }}>
-            <CardActionArea>
-                <CardMedia component="img" height="140" image={game?.keyImageUrl} alt="green iguana" />
-                <CardContent>
+        <Card onClick={() => window?.open(BuildClickableLink(game?.platform, game?.id))} className={styles.card}>
+            <CardActionArea className={styles.cardActionArea}>
+                <CardMedia className={styles.cardImage} component="img" image={game?.keyImageUrl} alt="image vidéo game" />
+                <CardContent className={styles.cardBody}>
                     <Typography gutterBottom variant="h5" component="div">
-                        {game.title}
+                        {game?.title}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        {game.description}
+                        {TrimString(game?.description, 150)}
                     </Typography>
-                    <Typography mt={2} variant="body2" color="text.secondary">
-                        Du <strong>{DateFormat(game.startDate)}</strong> au <strong>{DateFormat(game.endDate)}</strong>
+                    {game?.startDate && game?.endDate ? (
+                        <Typography className={styles?.dateSquare} mt={2} variant="body2" color="text.secondary">
+                            {BuildDateString(game?.startDate, game?.endDate)}
+                        </Typography>
+                    ) : null}
+                    <Typography className={styles?.dateSquare} mt={2} variant="body2" color="text.secondary">
+                        {BuildPriceString(game?.originalPrice, game?.discountPrice, game?.currencyCode)}
                     </Typography>
                 </CardContent>
             </CardActionArea>
-            <CardActions>
-                <Button
-                    onClick={() => ButtonClickHandler(statusAvailable)}
-                    variant="outlined"
-                    disabled={!statusAvailable}
-                    size="small"
-                    color={statusAvailable ? "success" : "error"}>
-                    { statusAvailable? "Disponible" : "A venir"}
-                </Button>
-            </CardActions>
         </Card>
     );
 }

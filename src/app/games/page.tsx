@@ -1,19 +1,23 @@
+import { getEgsRessources, getSteamResources, buildIGameObject } from "../../../utils/gameFunctions";
+import EgsSection from "@/Sections/GameSection";
 import { IGame } from "../../../Typescript/Interfaces/game_interface";
-import Card from "../../components/GameCard";
-import { getEgsRessources, getSteamResources, buildEgsGameObject } from "../../../utils/gameFunctions";
-import EgsSection from "@/Sections/EgsSection";
-import SteamSection from "@/Sections/SteamSection";
 
-export default async function Games(props: any) {
-    const ressources: any = await getEgsRessources();
-    const allGames = [...ressources?.currentGames, ...ressources?.nextGames];
+export default async function Games() {
+    const list: string[] = ["gggg", "faster than light"];
+    const allGames: IGame[] = [];
 
-    // console.log(data);
+    const ressourcesEgs: any[] = await getEgsRessources();
+    ressourcesEgs?.map((el: object) => {
+        allGames?.push(buildIGameObject(el));
+    });
+    const ressourcesSteam: any = await getSteamResources(list);
+    ressourcesSteam?.map((el: object) => {
+        allGames?.push(buildIGameObject(el));
+    });
 
     return (
-        <div className="container mx-auto flex flex-col">
-            <EgsSection />
-            <SteamSection />
+        <div className="container mx-auto flex flex-col justify-center">
+            <EgsSection allEgsGames={allGames} />
         </div>
     );
 }
