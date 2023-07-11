@@ -3,6 +3,37 @@
     max-height: 600px;
     margin-right: 20px;
     margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.card:hover {
+    filter: brightness(90%);
+}
+
+.cardBody {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.cardTitle {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.cardParagraph {
+    font-size: 15px;
+    text-align: justify;
+    justify-content: flex-end;
+}
+
+.cardPriceParagraph {
+    font-size: 15px;
+    transform: translateY(100%);
+    display: inline-block;
+    margin-top: 50px;
 }
 
 .cardImage {

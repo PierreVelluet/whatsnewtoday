@@ -2,53 +2,77 @@
 
 import { EpicFreeGames } from "epic-free-games";
 import { IGame } from "../Typescript/Interfaces/game_interface";
-const parse = require("html-react-parser");
 import { currency_symbols, platformLinks } from "./staticDatas";
-import { format, isEqual, isBefore, isAfter } from "date-fns";
+import { format } from "date-fns";
+const parse = require("html-react-parser");
 
 // GENERAL FUNCTIONS //
 
-export const buildIGameObject = (obj: any): IGame => {
-    console.log("OBJ ID CHECK", obj);
+export const BuildIGameObject = (obj: any): IGame => {
+    const platform = obj?.id ? "Egs" : "Steam";
     const game: IGame = {
-        id: obj?.id ?? obj?.steam_appid,
-        platform: obj?.id ? "Egs" : "Steam",
+        platform: platform,
         title: obj?.title ?? obj?.name,
-        description: obj?.description ?? obj?.short_description,
+        description: TrimString(obj?.description ?? obj?.short_description, 150),
         keyImageUrl: obj?.keyImages?.[0].url ?? obj?.header_image,
-        startDate:
-            obj?.promotions?.promotionalOffers[0]?.promotionalOffers[0]?.startDate ??
+        dateString: BuildDateString(
             obj?.promotions?.upcomingPromotionalOffers[0]?.promotionalOffers[0]?.startDate,
-        endDate:
-            obj?.promotions?.promotionalOffers[0]?.promotionalOffers[0]?.endDate ??
-            obj?.promotions?.upcomingPromotionalOffers[0]?.promotionalOffers[0]?.endDate,
-        status: obj?.status,
-        originalPrice: obj?.price?.totalPrice?.originalPrice ?? obj?.price_overview?.initial,
-        discountPrice: obj?.price?.totalPrice?.discountPrice ?? obj?.price_overview?.final,
-        currencyCode: obj?.price?.totalPrice?.currencyCode ?? obj?.price_overview?.currency,
+            obj?.promotions?.upcomingPromotionalOffers[0]?.promotionalOffers[0]?.endDate
+        ),
+        priceString: BuildPriceString(
+            platform == "Egs"
+                ? setEgsCorrectPrice(obj?.price?.totalPrice?.originalPrice, obj?.price?.totalPrice?.currencyInfo?.decimals)
+                : obj?.price_overview?.initial,
+            platform == "Egs"
+                ? setEgsCorrectPrice(obj?.price?.totalPrice?.discountPrice, obj?.price?.totalPrice?.currencyInfo?.decimals)
+                : obj?.price_overview?.final,
+            obj?.price?.totalPrice?.currencyCode ?? obj?.price_overview?.currency
+        ),
+        linkString: BuildClickableLink(platform, obj?.title ?? obj?.steam_appid),
     };
 
     return game;
 };
 
+const setEgsCorrectPrice = (price: string, nbDecimal: number): number => {
+    return nbDecimal == 2 ? parseInt(price) / 100 : parseInt(price);
+};
+
 const DateFormat = (data: string): string => {
     if (!data) return "";
-    const dateFinale = format(new Date(data), "dd-MM-yyyy");
+    const dateFinale = format(new Date(data), "dd-MM");
 
     return dateFinale;
 };
 
-export const BuildDateString = (startDate: string, endDate: string): string => {
-    return `Du <strong>${DateFormat(startDate)}</strong> au <strong>${DateFormat(endDate)}</strong>`;
+export const BuildDateString = (startDate: string | undefined, endDate: string | undefined): string => {
+    if (startDate == undefined || endDate == undefined) return "";
+
+    return `<strong>Free</strong> from <strong>${DateFormat(startDate)}</strong> to <strong>${DateFormat(endDate)}</strong>`;
+};
+
+const CalculPercentage = (originalPrice: number, discountPrice: number): number => {
+    return ((originalPrice - discountPrice) / originalPrice) * 100;
 };
 
 export const BuildPriceString = (originalPrice: number, discountPrice: number, currencyCode: string): string => {
-    return `Base price: <strong>{${originalPrice} ${currency_symbols[currencyCode]}}</strong> Now:{" "}
-    <strong>{${discountPrice} ${currency_symbols[currencyCode]}}</strong>`;
+    if (originalPrice == discountPrice) return `Price: <strong>${originalPrice}${currency_symbols[currencyCode]}</strong>`;
+
+    return `Base price: <strong>${originalPrice} ${currency_symbols[currencyCode]}</strong> <br> Now:
+    <strong className={styles.lol}>${discountPrice == 0 ? "Free" : discountPrice} ${
+        discountPrice == 0 ? "" : currency_symbols[currencyCode] + ` (-${CalculPercentage(originalPrice, discountPrice)}%)`
+    }</strong>`;
 };
 
 export const BuildClickableLink = (platform: string, gameId: string): string => {
-    return `${platformLinks[platform]}${gameId}`;
+    switch (platform) {
+        case "Egs":
+            return `${platformLinks[platform]}${gameId.toLowerCase()}`;
+        case "Steam":
+            return `${platformLinks[platform]}${gameId}`;
+        default:
+            return "";
+    }
 };
 
 export const TrimString = (text: string, nbCaracters: number): string => {
@@ -60,7 +84,7 @@ export const TrimString = (text: string, nbCaracters: number): string => {
 // EGS FUNCTIONS //
 
 export async function getEgsRessources() {
-    const epicFreeGames = new EpicFreeGames({ country: "FR", locale: "fr", includeAll: true });
+    const epicFreeGames = new EpicFreeGames({ country: "US", locale: "en-US", includeAll: true });
     const games = await epicFreeGames
         .getGames()
         .then((res: any) => {
@@ -76,7 +100,7 @@ export async function getEgsRessources() {
 
 // END EGS FUNCTIONS
 
-// STEAM FUNCTIONS 
+// STEAM FUNCTIONS
 
 export async function fetchGamesByAppid(appid: string) {
     "use server";

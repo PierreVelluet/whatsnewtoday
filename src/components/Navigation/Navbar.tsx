@@ -22,7 +22,7 @@ import { usePathname } from "next/navigation";
 
 const pages = [
     { name: "Jeux vidéo", ref: "games" },
-    { name: "Matériel grimpe", ref: "" },
+    { name: "Matériel grimpe", ref: "/" },
 ];
 const settings = ["Nique", "ta", "mère", "stp"];
 
@@ -96,7 +96,7 @@ function ResponsiveAppBar() {
                                 display: { xs: "block", md: "none" },
                             }}>
                             {pages.map((page) => (
-                                <Link key={page.ref} href={page.ref}>
+                                <Link key={page.ref} href={page?.ref ?? "/"}>
                                     <MenuItem onClick={() => handleClickitemNavigation(page.ref)}>
                                         <Typography textAlign="center">{page.ref}</Typography>
                                     </MenuItem>
@@ -125,7 +125,7 @@ function ResponsiveAppBar() {
                                 key={page.ref}
                                 onClick={() => handleClickitemNavigation(page.ref)}
                                 // sx={{ my: 2, color: isPageActive(page.ref) ? "red" : "white", display: "block" }}>
-                                sx={{ my: 2, color:  "red" }}>
+                                sx={{ my: 2, color: "red" }}>
                                 {page.name}
                             </Button>
                         ))}
@@ -134,7 +134,7 @@ function ResponsiveAppBar() {
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                                <Avatar alt="Remy Sharp" src="/" />
                             </IconButton>
                         </Tooltip>
                         <Menu

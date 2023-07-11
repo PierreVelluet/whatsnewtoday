@@ -1,13 +1,9 @@
 export interface IGame {
-    id: string,
+    platform: string;
     title: string;
     description: string;
     keyImageUrl: string;
-    status: string;
-    startDate: string;
-    endDate: string;
-    originalPrice: number;
-    discountPrice: number;
-    currencyCode: string;
-    platform: string;
+    dateString: string;
+    priceString: string;
+    linkString: string;
 }

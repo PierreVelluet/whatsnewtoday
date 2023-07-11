@@ -19,6 +19,6 @@ export const currency_symbols: GenericObject = {
 };
 
 export const platformLinks: GenericObject = {
-    Egs: "https://store.epicgames.com/en-US/free-games",
-    Steam: "https://store.steampowered.com/app/"
-}
+    Egs: "https://store.epicgames.com/fr/p/",
+    Steam: "https://store.steampowered.com/app/",
+};
