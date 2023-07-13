@@ -4,7 +4,6 @@ import { EpicFreeGames } from "epic-free-games";
 import { IGame } from "../Typescript/Interfaces/game_interface";
 import { currency_symbols, platformLinks } from "./staticDatas";
 import { format } from "date-fns";
-const parse = require("html-react-parser");
 
 // GENERAL FUNCTIONS //
 

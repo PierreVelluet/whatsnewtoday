@@ -19,7 +19,6 @@ export default function GameSection(props: any) {
             const gamesData: any[] = [];
             await getEgsRessources().then((data) => {
                 data?.forEach((g) => {
-                    console.log(g)
                     gamesData?.push(g);
                 });
             });

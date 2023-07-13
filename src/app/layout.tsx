@@ -12,9 +12,10 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en">
-            {/* <header></header> */}
-            {/* <Navbar /> */}
-            <body style={{ marginTop: "90px" }} className={inter.className}>
+            <body className={inter.className}>
+                <div className="mb-7">
+                    <Navbar />
+                </div>
                 {children}
             </body>
         </html>

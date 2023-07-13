@@ -10,6 +10,10 @@
     filter: brightness(90%);
 }
 
+.cardImage {
+    
+}
+
 .cardBody {
     display: flex;
     flex-direction: column;
