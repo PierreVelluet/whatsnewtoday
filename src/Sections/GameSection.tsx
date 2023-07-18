@@ -32,7 +32,6 @@ export default function GameSection(props: any) {
         fetchData();
     }, []);
 
-    // console.log("allGames", allGames)
     return (
         <div className="container mx-auto flex flex-col">
             <h2 className="flex justify-center text-3xl mb-5">Game that might interest you</h2>
