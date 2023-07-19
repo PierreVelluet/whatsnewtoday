@@ -5,6 +5,9 @@ import { IGame } from "../../Typescript/Interfaces/game_interface";
 import GameCard from "../components/GameCard";
 import { getEgsRessources, getSteamResources } from "../../utils/gameFunctions";
 
+import animations from "../../utils/animations";
+import styles from "./GameSection.module.css";
+
 export default function GameSection(props: any) {
     const {
         list,
@@ -30,14 +33,20 @@ export default function GameSection(props: any) {
             setAllGames(gamesData);
         };
         fetchData();
+            // eslint-disable-next-line
     }, []);
 
     return (
         <div className="container mx-auto flex flex-col">
             <h2 className="flex justify-center text-3xl mb-5">Game that might interest you</h2>
-            <div className="container mx-auto flex justify-center" style={{ flexFlow: "row wrap" }}>
+            <div className={`${styles.grid} container mx-auto flex justify-center`} style={{ flexFlow: "row wrap" }}>
                 {allGames?.map((el: IGame, index: number) => {
-                    return <GameCard key={Math.random()} gameData={el} />;
+                    return (
+                        // @ts-ignore
+                        <div key={Math.random()} className={` ${animations.bounceIn} ${animations[`delay${index + 1}`]}`}>
+                            <GameCard gameData={el} />{" "}
+                        </div>
+                    );
                 })}
             </div>
         </div>

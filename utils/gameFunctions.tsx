@@ -27,7 +27,7 @@ export const BuildIGameObject = (obj: any): IGame => {
                 : obj?.price_overview?.final,
             obj?.price?.totalPrice?.currencyCode ?? obj?.price_overview?.currency
         ),
-        linkString: BuildClickableLink(platform, obj?.title ?? obj?.steam_appid),
+        linkString: `${platformLinks[platform]}${obj?.catalogNs?.mappings?.[0]?.pageSlug ?? obj?.steam_appid}`,
     };
 
     return game;
@@ -61,17 +61,6 @@ export const BuildPriceString = (originalPrice: number, discountPrice: number, c
     <strong className={styles.lol}>${discountPrice == 0 ? "Free" : discountPrice} ${
         discountPrice == 0 ? "" : currency_symbols[currencyCode] + ` (-${CalculPercentage(originalPrice, discountPrice)}%)`
     }</strong>`;
-};
-
-export const BuildClickableLink = (platform: string, gameId: string): string => {
-    switch (platform) {
-        case "Egs":
-            return `${platformLinks[platform]}${gameId.toLowerCase()}`;
-        case "Steam":
-            return `${platformLinks[platform]}${gameId}`;
-        default:
-            return "";
-    }
 };
 
 export const TrimString = (text: string, nbCaracters: number): string => {

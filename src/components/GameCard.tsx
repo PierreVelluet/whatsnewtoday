@@ -6,7 +6,6 @@ import CardMedia from "@mui/material/CardMedia";
 import { IGame } from "../../Typescript/Interfaces/game_interface";
 import { BuildIGameObject } from "../../utils/gameFunctions";
 
-
 import styles from "./GameCard.module.css";
 
 export default function GameCard(props: any) {
@@ -18,7 +17,7 @@ export default function GameCard(props: any) {
 
     const [game, setGame] = React.useState<IGame>();
     const parse = require("html-react-parser");
-    
+
     const IsTypeString = (str: any): boolean => {
         return typeof str === "string";
     };
