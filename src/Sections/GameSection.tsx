@@ -4,6 +4,7 @@ import * as React from "react";
 import { IGame } from "../../Typescript/Interfaces/game_interface";
 import GameCard from "../components/GameCard";
 import { getEgsRessources, getSteamResources } from "../../utils/gameFunctions";
+import { useLoading } from "../app/context/loadingContext";
 
 import animations from "../../utils/animations";
 import styles from "./GameSection.module.css";
@@ -15,7 +16,9 @@ export default function GameSection(props: any) {
         list: string[];
     } = props;
 
+    const { loading, setLoading } = useLoading();
     const [allGames, setAllGames] = React.useState<IGame[]>([]);
+    console.log(loading)
 
     React.useEffect(() => {
         const fetchData = async () => {
@@ -33,7 +36,7 @@ export default function GameSection(props: any) {
             setAllGames(gamesData);
         };
         fetchData();
-            // eslint-disable-next-line
+        // eslint-disable-next-line
     }, []);
 
     return (
