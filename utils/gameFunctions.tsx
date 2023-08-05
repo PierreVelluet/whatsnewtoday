@@ -82,7 +82,16 @@ export async function getEgsRessources() {
             console.log("err: ", err);
         });
 
-    const result: object[] = [...games.currentGames, ...games.nextGames];
+    // const result: object[] = [...games?.currentGames, ...games?.nextGames];
+
+    const result: object[] = [];
+    games?.currentGames?.map((el:object) => {
+        result?.push(el)
+    })
+    games?.nextGames?.map((el:object) => {
+        result?.push(el)
+    })
+
     return result;
 }
 
