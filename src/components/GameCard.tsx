@@ -27,18 +27,18 @@ export default function GameCard(props: any) {
             setGame(await BuildIGameObject(gameData));
         };
         fetchData();
+        // eslint-disable-next-line
     }, []);
 
     return (
         <Card onClick={() => window?.open(game?.linkString)} className={styles.card}>
-            <CardMedia className={styles.cardImage} component="img" image={game?.keyImageUrl} alt="image vidéo game" />
+            <div className={game?.priceString == "Free" ? styles.freeRibon : styles.soonRibon}>
+                <span>{IsTypeString(game?.priceString) ? parse(game?.priceString) : ""}</span>
+            </div>
+            <CardMedia className={styles.cardImage} component="img" image={game?.keyImageUrl} alt="image video game" />
             <div className={styles.cardBody}>
                 <p className={styles.cardTitle}>{game?.title}</p>
                 <p className={styles.cardParagraph}>{IsTypeString(game?.description) ? parse(game?.description) : ""}</p>
-                {IsTypeString(game?.dateString) && game?.dateString ? (
-                    <p className={styles.cardParagraph}>{parse(game.dateString)}</p>
-                ) : null}
-                <p className={styles.cardParagraph}>{IsTypeString(game?.priceString) ? parse(game?.priceString) : ""}</p>
             </div>
         </Card>
     );

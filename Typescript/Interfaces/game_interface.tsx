@@ -3,7 +3,6 @@ export interface IGame {
     title: string;
     description: string;
     keyImageUrl: string;
-    dateString: string;
     priceString: string;
     linkString: string;
 }

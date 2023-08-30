@@ -8,46 +8,37 @@ import { format } from "date-fns";
 // GENERAL FUNCTIONS //
 
 export const BuildIGameObject = (obj: any): IGame => {
-    const platform = obj?.id ? "Egs" : "Steam";
+    const platform = obj?.steam_appid != undefined ? "Steam" : "Egs";
+
     const game: IGame = {
         platform: platform,
         title: obj?.title ?? obj?.name,
-        description: TrimString(obj?.description ?? obj?.short_description, 150),
+        description: TrimString(obj?.description ?? obj?.short_description, 250),
         keyImageUrl: obj?.keyImages?.[0].url ?? obj?.header_image,
-        dateString: BuildDateString(
-            obj?.promotions?.upcomingPromotionalOffers[0]?.promotionalOffers[0]?.startDate,
-            obj?.promotions?.upcomingPromotionalOffers[0]?.promotionalOffers[0]?.endDate
-        ),
-        priceString: BuildPriceString(
-            platform == "Egs"
-                ? setEgsCorrectPrice(obj?.price?.totalPrice?.originalPrice, obj?.price?.totalPrice?.currencyInfo?.decimals)
-                : obj?.price_overview?.initial,
-            platform == "Egs"
-                ? setEgsCorrectPrice(obj?.price?.totalPrice?.discountPrice, obj?.price?.totalPrice?.currencyInfo?.decimals)
-                : obj?.price_overview?.final,
-            obj?.price?.totalPrice?.currencyCode ?? obj?.price_overview?.currency
-        ),
+        priceString: buildEgsRibbonText(obj),
         linkString: `${platformLinks[platform]}${obj?.catalogNs?.mappings?.[0]?.pageSlug ?? obj?.steam_appid}`,
     };
 
     return game;
 };
 
-const setEgsCorrectPrice = (price: string, nbDecimal: number): number => {
-    return nbDecimal == 2 ? parseInt(price) / 100 : parseInt(price);
+const buildEgsRibbonText = (obj: any): string => {
+    if (obj?.price?.totalPrice?.discountPrice == 0) return "Free";
+
+    return BuildDateString(obj?.promotions?.upcomingPromotionalOffers[0]?.promotionalOffers[0]?.startDate);
 };
 
 const DateFormat = (data: string): string => {
     if (!data) return "";
-    const dateFinale = format(new Date(data), "dd-MM");
+    const dateFinale = format(new Date(data), "dd-MM-yyyy");
 
     return dateFinale;
 };
 
-export const BuildDateString = (startDate: string | undefined, endDate: string | undefined): string => {
-    if (startDate == undefined || endDate == undefined) return "";
+export const BuildDateString = (startDate: string): string => {
+    if (startDate == undefined) return "";
 
-    return `<strong>Free</strong> from <strong>${DateFormat(startDate)}</strong> to <strong>${DateFormat(endDate)}</strong>`;
+    return `${DateFormat(startDate)}`;
 };
 
 const CalculPercentage = (originalPrice: number, discountPrice: number): number => {
@@ -55,15 +46,14 @@ const CalculPercentage = (originalPrice: number, discountPrice: number): number 
 };
 
 export const BuildPriceString = (originalPrice: number, discountPrice: number, currencyCode: string): string => {
-    if (originalPrice == discountPrice) return `Price: <strong>${originalPrice}${currency_symbols[currencyCode]}</strong>`;
+    if (originalPrice == discountPrice) return `<strong>${originalPrice}${currency_symbols[currencyCode] ?? "?"}</strong>`;
 
-    return `Base price: <strong>${originalPrice} ${currency_symbols[currencyCode]}</strong> <br> Now:
-    <strong className={styles.lol}>${discountPrice == 0 ? "Free" : discountPrice} ${
-        discountPrice == 0 ? "" : currency_symbols[currencyCode] + ` (-${CalculPercentage(originalPrice, discountPrice)}%)`
-    }</strong>`;
+    return "Free";
 };
 
 export const TrimString = (text: string, nbCaracters: number): string => {
+    if (text?.length <= nbCaracters) return text;
+
     return text?.substring(0, nbCaracters) + "...";
 };
 
@@ -85,12 +75,12 @@ export async function getEgsRessources() {
     // const result: object[] = [...games?.currentGames, ...games?.nextGames];
 
     const result: object[] = [];
-    games?.currentGames?.map((el:object) => {
-        result?.push(el)
-    })
-    games?.nextGames?.map((el:object) => {
-        result?.push(el)
-    })
+    games?.currentGames?.map((el: object) => {
+        result?.push(el);
+    });
+    games?.nextGames?.map((el: object) => {
+        result?.push(el);
+    });
 
     return result;
 }

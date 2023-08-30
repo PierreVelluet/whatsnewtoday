@@ -4,6 +4,7 @@
     margin-right: 20px;
     margin-bottom: 20px;
     cursor: pointer;
+    position: relative;
 }
 
 .card:hover {
@@ -41,12 +42,84 @@
     object-fit: cover;
 }
 
-.dateSquare{
-    justify-content: flex-end;
+.dateParagraph {
+    text-align: center;
+    width: 100%;
+    font-size: 12px;
+    font-style: italic;
 }
+
+.freeRibon,
+.soonRibon {
+    position: absolute;
+    right: -5px; top: -5px;
+    z-index: 1;
+    overflow: hidden;
+    width: 75px; height: 75px;
+    text-align: right;
+  }
+
+  .freeRibon span,
+  .soonRibon span {
+    font-size: 13px;
+    font-weight: bold;
+    color: #FFF;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 20px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    width: 100px;
+    display: block;
+    background: #79A70A;
+    background: linear-gradient(#9BC90D 0%, #79A70A 100%);
+    box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+    position: absolute;
+    top: 19px; right: -21px;
+  }
+
+  .soonRibon span {
+    font-size:9px;
+    background: #89CFF0;
+    background: linear-gradient(#6CB4EE 0%, #89CFF0 100%);
+  }
+
+  .freeRibon span::before,
+  .soonRibon span::before {
+    content: "";
+    position: absolute; left: 0px; top: 100%;
+    z-index: -1;
+    border-left: 3px solid #79A70A;
+    border-right: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    border-top: 3px solid #79A70A;
+  }
+
+  .soonRibon span::before {
+    border-left: 3px solid #89CFF0;
+    border-top: 3px solid #89CFF0;
+  }
+
+  .freeRibon span::after,
+  .soonRibon span::after {
+    content: "";
+    position: absolute; right: 0px; top: 100%;
+    z-index: -1;
+    border-left: 3px solid transparent;
+    border-right: 3px solid #79A70A;
+    border-bottom: 3px solid transparent;
+    border-top: 3px solid #79A70A;
+  }
+
+  .soonRibon span::after{
+    border-right: 3px solid #89CFF0;
+    border-bottom: 3px solid transparent;
+    border-top: 3px solid #89CFF0;
+  }
 
 @media only screen and (max-width: 600px) {
     .card {
         margin-right: 0px;
     }
   }
+  
