@@ -69,10 +69,8 @@ export async function getEgsRessources() {
             return res;
         })
         .catch((err: any) => {
-            console.log("err: ", err);
+            console.log("EGS error: ", err);
         });
-
-    // const result: object[] = [...games?.currentGames, ...games?.nextGames];
 
     const result: object[] = [];
     games?.currentGames?.map((el: object) => {
@@ -91,14 +89,18 @@ export async function getEgsRessources() {
 
 export async function fetchGamesByAppid(appid: string) {
     "use server";
-    const game = await fetch(`http://store.steampowered.com/api/appdetails?appids=${appid}`, { cache: "no-store" });
+    const game = await fetch(`http://store.steampowered.com/api/appdetails?appids=${appid}`, { cache: "no-store" }).catch(
+        (err: any) => {
+            console.log("fetchGamesByAppid error: ", err);
+        }
+    );
 }
 
 export async function filterSteamRessources(data: any, acceptedValues: string[]) {
     const result: any[] = [];
     data?.applist?.apps?.map((el: any) => {
         if (acceptedValues.some((o) => el?.name?.toLowerCase().includes(o.toLowerCase())))
-            result?.push(`http://store.steampowered.com/api/appdetails?appids=${el?.appid}`);
+            result?.push(`http://store.steampowered.com/api/appdetails?appids=${el?.appid}&format=json`);
     });
 
     return result;
@@ -110,23 +112,37 @@ export async function getSteamResources(gamesNamesList: string[]) {
         .then((res) => res.json())
         .then((data) => {
             return data;
+        })
+        .catch((err: any) => {
+            console.log("getSteamResources error: ", err);
         });
 
     // Filter games
     const allpromises = await filterSteamRessources(allGames, gamesNamesList);
 
-    let requests = allpromises.map((url) =>
-        fetch(url).then((response) => {
-            return response.json();
-        })
-    );
+    const fetchAllRequest = async () => {
+        let requests = allpromises.map((url) =>
+            fetch(url)
+                .then((response) => {
+                    return response.json();
+                })
+                .catch((err: any) => {
+                    console.log("fetchAllRequest error: ", err);
+                })
+        );
 
-    const allPromisesResults = await Promise.all(requests).then((values) => {
-        return values;
-    });
+        return requests;
+    };
+
+    let requests = await fetchAllRequest();
+
+    const allPromisesResults = await Promise.all(requests)
+        .then((values) => {
+            return values;
+        })
+        .catch((err) => console.log("err", err));
 
     const finalResult: object[] = [];
-    // if (allPromisesResults?.every((p) => p == null)) return;
 
     allPromisesResults?.map((pr) => {
         const game: any = pr[Object?.keys(pr)[0]];

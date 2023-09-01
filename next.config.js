@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-const nextConfig =  {
+const nextConfig = {
     async headers() {
         return [
             {
@@ -17,7 +17,7 @@ const nextConfig =  {
     experimental: {
         serverActions: true,
         serverActionsBodySizeLimit: '5mb',
-      },
+    },
 }
 
 module.exports = nextConfig

@@ -1,4 +1,4 @@
-import JobsSection from "@/sections/JobsSection";
+import JobsSection from "@/sections/Jobs/JobsSection";
 
 export default async function Games() {
     const list: string[] = ["gggg", "faster than light"];
